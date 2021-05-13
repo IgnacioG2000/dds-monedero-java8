@@ -26,7 +26,7 @@ public class Cuenta {
   public void poner(double cuanto) {
     this.validarMonto(cuanto);
 
-    if (getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3) {
+    if (getMovimientos().stream().filter(movimiento ->movimiento.fueDepositado(LocalDate.now())).count() >= 3) {
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
 
