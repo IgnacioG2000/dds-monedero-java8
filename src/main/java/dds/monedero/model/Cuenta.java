@@ -33,13 +33,23 @@ public class Cuenta {
     this.modificarSaldo(new Movimiento(LocalDate.now(), cuanto, false));
   }
 
+  double montoExtraidoHoy() {
+    return this.getMontoExtraidoA(LocalDate.now());
+  }
+
+  double limite() {
+    return 1000 - this.montoExtraidoHoy();
+  }
+
   public void sacar(double cuanto) {
     this.validarMonto(cuanto);
-    double montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
-    double limite = 1000 - montoExtraidoHoy;
-    if (cuanto > limite) {
+    if(getSaldo() - cuanto < 0) {
+      throw new SaldoMenorException("No puede sacar mas de " + getSaldo() + " $");
+    }
+
+    if (cuanto > this.limite()) {
       throw new MaximoExtraccionDiarioException("No puede extraer mas de $ " + 1000
-          + " diarios, límite: " + limite);
+          + " diarios, límite: " + this.limite());
     }
     this.modificarSaldo(new Movimiento(LocalDate.now(), cuanto, true));
   }
